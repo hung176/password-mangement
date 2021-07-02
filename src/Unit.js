@@ -1,5 +1,5 @@
 import React from 'react';
-import firebase from './firebase';
+// import firebase from './firebase';
 import {
   Stack,
   Flex,
@@ -10,7 +10,7 @@ import {
   IconButton,
   Text,
 } from '@chakra-ui/react';
-import { AddIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { HamburgerIcon } from '@chakra-ui/icons';
 import FormAddPassword from './FormAddPassword';
 
 const Unit = ({ unit, onAddPassword }) => {
