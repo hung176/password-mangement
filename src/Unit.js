@@ -16,15 +16,15 @@ import FormAddPassword from './FormAddPassword';
 const Unit = ({ unit, onAddPassword }) => {
   const properties = Object.keys(unit).filter(p => p !== 'id');
 
-  const handleAddPassword = (unitId) => {
-    onAddPassword(unitId);
+  const handleAddPassword = (id, newProperties) => {
+    onAddPassword(id, newProperties);
   };
 
   return (
     <Stack spacing={6}>
       <Flex mb={2} justify="space-between" align="center">
         <Heading fontSize="2xl">{unit.id}</Heading>
-        <FormAddPassword onChage={handleAddPassword} />
+        <FormAddPassword onChange={handleAddPassword} unitId={unit.id} />
       </Flex>
 
       <Stack isInline spacing={10}>
@@ -40,7 +40,7 @@ const Unit = ({ unit, onAddPassword }) => {
                 />
               </Flex>
             </FormLabel>
-            <Input type="text" value={unit[p]} />
+            <Input type="text" value={unit[p]} onChange={() => console.log('test')} />
           </FormControl>
         ))}
       </Stack>

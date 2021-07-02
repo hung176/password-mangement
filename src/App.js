@@ -34,11 +34,19 @@ function App() {
     
   };
 
-  const handleAddPassword = (newUnit) => {
-    // setUnits([
-    //   ...units,
-    //   newUnit
-    // ]);
+  const handleAddPassword = (unitId, newProperties) => {
+    const unit = units.find(u => u.id === unitId);
+    const newUnit = {
+      ...unit,
+      ...newProperties
+    };
+    const unitsFilter = units.filter(u => u.id !== unitId);
+    setUnits([
+      ...unitsFilter,
+      newUnit,
+    ]);
+
+    db.collection('passwords').doc(unitId).set(newUnit);
   };
 
   return (

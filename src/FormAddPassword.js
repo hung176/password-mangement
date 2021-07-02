@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Stack,
   Input,
@@ -13,49 +13,60 @@ import {
   PopoverContent,
   PopoverCloseButton,
 } from '@chakra-ui/react';
-import FocusLock from "react-focus-lock";
 import { AddIcon } from '@chakra-ui/icons';
 
 
-const TextInput = React.forwardRef((props, ref) => {
-  const handleChange = (e) => {
-    console.log(e.target.value);
-  }
-  return (
-    <FormControl>
-      <FormLabel htmlFor={props.id}>{props.label}</FormLabel>
-      <Input
-        ref={ref}
-        id={props.id}
-        {...props}
-        onChange={handleChange}
-      />
-    </FormControl>
-  )
-});
+const Form = ({ unitId, onCancel, onChange }) => {
+  const [propertiesName, setPropertiesName] = useState('');
+  const [password, setPassword] = useState('');
 
-const Form = ({ firstFieldRef, onCancel }) => {
+  const handleChange = (e) => {
+    const targetName = e.target.name;
+    const targetValue = e.target.value;
+  
+    if (targetName === 'properties') {
+      setPropertiesName(targetValue);
+    }
+
+    if (targetName === 'password') {
+      setPassword(targetValue);
+    }
+  };
+
   return (
     <Stack spacing={4}>
-      <TextInput
-        label="Properties name"
-        name=""
-        type="text"
-        id="properties-name"
-        ref={firstFieldRef}
-      />
-      <TextInput
-        label="Password"
-        id="password"
-        type="text"
-      />
+      <FormControl>
+        <FormLabel>Properties name</FormLabel>
+        <Input
+          onChange={handleChange}
+          name="properties"
+          value={propertiesName}
+        />
+      </FormControl>
+  
+      <FormControl>
+        <FormLabel>Password</FormLabel>
+        <Input
+          onChange={handleChange}
+          name="password"
+          value={password}
+        />
+      </FormControl>
+
       <ButtonGroup d="flex" justifyContent="flex-end">
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
         <Button
-          isDisabled
+          // isDisabled
           colorScheme="blue"
+          onClick={() => {
+            const newValue = { [propertiesName]: password };
+            onChange(unitId, newValue);
+            onCancel();
+            setPropertiesName('');
+            setPassword('');
+          }}
         >
           Save
         </Button>
@@ -64,19 +75,17 @@ const Form = ({ firstFieldRef, onCancel }) => {
   )
 };
 
-const FormAddPassword = () => {
+const FormAddPassword = ({ unitId, onChange }) => {
   const { onOpen, onClose, isOpen } = useDisclosure()
-  const firstFieldRef = React.useRef(null)
 
   return (
     <>
       <Popover
         isOpen={isOpen}
-        initialFocusRef={firstFieldRef}
         onOpen={onOpen}
         onClose={onClose}
         placement="auto"
-        closeOnBlur={false}
+        // closeOnBlur={false}
       >
         <PopoverTrigger>
           <IconButton
@@ -89,10 +98,8 @@ const FormAddPassword = () => {
           />
         </PopoverTrigger>
         <PopoverContent p={5}>
-          <FocusLock returnFocus persistentFocus={false}>
-            <PopoverCloseButton />
-            <Form firstFieldRef={firstFieldRef} onCancel={onClose} />
-          </FocusLock>
+          <PopoverCloseButton />
+          <Form onCancel={onClose} unitId={unitId} onChange={onChange} />
         </PopoverContent>
       </Popover>
     </>
