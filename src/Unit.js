@@ -15,14 +15,13 @@ import {
   MenuItem,
   Button,
 } from '@chakra-ui/react';
-import { HamburgerIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, DeleteIcon, EditIcon, CheckIcon } from '@chakra-ui/icons';
 import FormAddPassword from './FormAddPassword';
 import omit from 'lodash.omit';
 
 const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
   const [unitProperties, setUnitProperties] = useState(unit);
   const [isDisableInput, setIsDisableInput] = useState(true);
-  console.log('unitProperties', unitProperties)
 
   const properties = Object.keys(unit).filter(p => p !== 'id');
 
@@ -41,23 +40,33 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
       [e.target.name]: e.target.value,
     });
   };
-  // const handleSelect = (e) => {
-  //   console.log(e.target)
-  //   e.target.select();
-  // }
 
   const handleEditProperty = (p) => {
     console.log(unitProperties)
     setIsDisableInput(false);
-    // textInput.focus();
-    // onUpdate(unitProperties);
+  }
+
+  const handleCheck = () => {
+    setIsDisableInput(true);
+    onUpdate(unitProperties);
   }
 
   return (
     <Stack spacing={6}>
       <Flex mb={2} justify="space-between" align="center">
         <Heading fontSize="2xl">{unit.id}</Heading>
-        <FormAddPassword onChange={handleAddPassword} unitId={unit.id} />
+        <Stack isInline spacing={2}>
+          {!isDisableInput && (
+            <IconButton
+              icon={<CheckIcon />}
+              colorScheme="green"
+              size="md" 
+              variant="ghost"
+              onClick={handleCheck}
+            />
+          )}
+          <FormAddPassword onChange={handleAddPassword} unitId={unit.id} />
+        </Stack>
       </Flex>
 
       <Flex flexWrap="wrap" justify="space-between">
@@ -106,8 +115,6 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
               value={unitProperties[p]}
               name={p}
               isDisabled={isDisableInput}
-              // ref={(input) => { textInput = input }}
-              // onFocus={handleSelect}
               onChange={handleInputChange}
             />
           </FormControl>
