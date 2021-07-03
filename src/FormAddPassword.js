@@ -20,6 +20,8 @@ const Form = ({ unitId, onCancel, onChange }) => {
   const [propertiesName, setPropertiesName] = useState('');
   const [password, setPassword] = useState('');
 
+  const isDisabled = propertiesName === '' || password === '';
+
   const handleChange = (e) => {
     const targetName = e.target.name;
     const targetValue = e.target.value;
@@ -34,32 +36,42 @@ const Form = ({ unitId, onCancel, onChange }) => {
   };
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={4} w="200px">
       <FormControl>
         <FormLabel>Properties name</FormLabel>
         <Input
-          onChange={handleChange}
           name="properties"
           value={propertiesName}
+          onChange={handleChange}
+          size="sm"
         />
       </FormControl>
   
       <FormControl>
         <FormLabel>Password</FormLabel>
         <Input
-          onChange={handleChange}
           name="password"
           value={password}
+          onChange={handleChange}
+          size="sm"
         />
       </FormControl>
 
       <ButtonGroup d="flex" justifyContent="flex-end">
-        <Button variant="outline" onClick={onCancel}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+          onCancel();
+          setPropertiesName('');
+          setPassword('');
+        }}>
           Cancel
         </Button>
         <Button
-          // isDisabled
+          size="sm"
           colorScheme="blue"
+          isDisabled={isDisabled}
           onClick={() => {
             const newValue = { [propertiesName]: password };
             onChange(unitId, newValue);
@@ -85,7 +97,6 @@ const FormAddPassword = ({ unitId, onChange }) => {
         onOpen={onOpen}
         onClose={onClose}
         placement="auto"
-        // closeOnBlur={false}
       >
         <PopoverTrigger>
           <IconButton
@@ -97,7 +108,11 @@ const FormAddPassword = ({ unitId, onChange }) => {
             icon={<AddIcon />}
           />
         </PopoverTrigger>
-        <PopoverContent p={5}>
+        <PopoverContent
+          p={5}
+          _focus={{ outline: 'none' }}
+          w="fit-content"
+        >
           <PopoverCloseButton />
           <Form onCancel={onClose} unitId={unitId} onChange={onChange} />
         </PopoverContent>

@@ -40,11 +40,9 @@ function App() {
       ...unit,
       ...newProperties
     };
-    const unitsFilter = units.filter(u => u.id !== unitId);
-    setUnits([
-      ...unitsFilter,
-      newUnit,
-    ]);
+
+    const newUnits = units.map(unit => (unit.id === unitId ? { ...unit, ...newProperties } : unit));
+    setUnits(newUnits);
 
     db.collection('passwords').doc(unitId).set(newUnit);
   };

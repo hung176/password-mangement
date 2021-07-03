@@ -27,7 +27,7 @@ const Unit = ({ unit, onAddPassword }) => {
         <FormAddPassword onChange={handleAddPassword} unitId={unit.id} />
       </Flex>
 
-      <Stack isInline spacing={10}>
+      <Flex flexWrap="wrap" justify="space-between">
         {properties.map(p => (
           <FormControl id={p} key={p} w="150px">
             <FormLabel w="100%">
@@ -43,7 +43,7 @@ const Unit = ({ unit, onAddPassword }) => {
             <Input type="text" value={unit[p]} onChange={() => console.log('test')} />
           </FormControl>
         ))}
-      </Stack>
+      </Flex>
     </Stack>
   );
 }
