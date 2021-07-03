@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import firebase from './firebase';
 import {
   Stack,
@@ -19,7 +19,11 @@ import { HamburgerIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import FormAddPassword from './FormAddPassword';
 import omit from 'lodash.omit';
 
-const Unit = ({ unit, onAddPassword, onDelete }) => {
+const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
+  const [unitProperties, setUnitProperties] = useState(unit);
+  const [isDisableInput, setIsDisableInput] = useState(true);
+  console.log('unitProperties', unitProperties)
+
   const properties = Object.keys(unit).filter(p => p !== 'id');
 
   const handleAddPassword = (id, newProperties) => {
@@ -30,6 +34,24 @@ const Unit = ({ unit, onAddPassword, onDelete }) => {
     const newUnit = omit(unit, p)
     onDelete(newUnit);
   };
+
+  const handleInputChange = (e) => {
+    setUnitProperties({
+      ...unitProperties,
+      [e.target.name]: e.target.value,
+    });
+  };
+  // const handleSelect = (e) => {
+  //   console.log(e.target)
+  //   e.target.select();
+  // }
+
+  const handleEditProperty = (p) => {
+    console.log(unitProperties)
+    setIsDisableInput(false);
+    // textInput.focus();
+    // onUpdate(unitProperties);
+  }
 
   return (
     <Stack spacing={6}>
@@ -54,17 +76,16 @@ const Unit = ({ unit, onAddPassword, onDelete }) => {
                     />
                   </MenuButton>
                   <MenuList>
-                    <MenuItem>
+                    <MenuItem onClick={() => handleDeleteProperty(p)}>
                       <Button
                         leftIcon={<DeleteIcon />}
                         size="sm"
                         variant="ghost"
-                        onClick={() => handleDeleteProperty(p)}
                       >
                         Delete
                       </Button>
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={() => handleEditProperty(p)}>
                       <Button
                         leftIcon={<EditIcon />}
                         size="sm"
@@ -78,7 +99,17 @@ const Unit = ({ unit, onAddPassword, onDelete }) => {
 
               </Flex>
             </FormLabel>
-            <Input type="text" value={unit[p]} onChange={() => console.log('test')} />
+
+            <Input
+              type="text"
+              variant="filled"
+              value={unitProperties[p]}
+              name={p}
+              isDisabled={isDisableInput}
+              // ref={(input) => { textInput = input }}
+              // onFocus={handleSelect}
+              onChange={handleInputChange}
+            />
           </FormControl>
         ))}
       </Flex>

@@ -14,7 +14,6 @@ const db = firebase.firestore();
 
 function App() {
   const [units, setUnits] = useState([]);
-  console.log(units)
 
   useEffect(() => {
     const fetchUnits = async() => {
@@ -54,6 +53,13 @@ function App() {
     db.collection('passwords').doc(newUnit.id).set(newUnit);
   };
 
+  const handleUpdateProperty = (newUnit) => {
+    const newUnits = units.map(unit => (unit.id === newUnit.id ? newUnit : unit));
+    setUnits(newUnits);
+
+    db.collection('passwords').doc(newUnit.id).set(newUnit);
+  };
+
   return (
     <Stack>
       <Box
@@ -84,6 +90,7 @@ function App() {
                   unit={unit}
                   onAddPassword={handleAddPassword}
                   onDelete={handleDeleteProperty}
+                  onUpdate={handleUpdateProperty}
                 />
               </Box>
             ))}
