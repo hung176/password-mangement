@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import firebase from './firebase';
 import {
   Stack,
@@ -14,16 +14,22 @@ import {
   MenuList,
   MenuItem,
   Button,
+  Box,
 } from '@chakra-ui/react';
 import { HamburgerIcon, DeleteIcon, EditIcon, CheckIcon } from '@chakra-ui/icons';
 import FormAddPassword from './FormAddPassword';
 import omit from 'lodash.omit';
 
 const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
+  const properties = Object.keys(unit).filter(p => p !== 'id');
+
   const [unitProperties, setUnitProperties] = useState(unit);
+  useEffect(() => {
+    setUnitProperties(unit)
+  }, [unit])
+
   const [isDisableInput, setIsDisableInput] = useState(true);
 
-  const properties = Object.keys(unit).filter(p => p !== 'id');
 
   const handleAddPassword = (id, newProperties) => {
     onAddPassword(id, newProperties);
@@ -41,8 +47,7 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
     });
   };
 
-  const handleEditProperty = (p) => {
-    console.log(unitProperties)
+  const handleEditProperty = () => {
     setIsDisableInput(false);
   }
 
@@ -57,54 +62,58 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
         <Heading fontSize="2xl">{unit.id}</Heading>
         <Stack isInline spacing={2}>
           {!isDisableInput && (
-            <IconButton
-              icon={<CheckIcon />}
-              colorScheme="green"
-              size="md" 
-              variant="ghost"
-              onClick={handleCheck}
-            />
+            <Box textAlign="center">
+              <IconButton
+                icon={<CheckIcon />}
+                colorScheme="green"
+                size="md" 
+                variant="ghost"
+                onClick={handleCheck}
+              />
+            </Box>
           )}
+          <Box textAlign="center">
+            <IconButton
+              leftIcon={<EditIcon />}
+              colorScheme="blue"
+              size="md"
+              variant="ghost"
+              onClick={() => handleEditProperty()}
+            />
+          </Box>
           <FormAddPassword onChange={handleAddPassword} unitId={unit.id} />
         </Stack>
       </Flex>
 
       <Flex flexWrap="wrap" justify="space-between">
         {properties.map(p => (
-          <FormControl id={p} key={p} w="120px" mt={{ base: '20px', md: 'none' }}>
+          <FormControl key={p} w="120px" mt={{ base: '20px', md: 'none' }}>
             <FormLabel w="100%">
               <Flex justify="space-between" align="center">
                 <Text fontWeight="semibold">{p}</Text>
 
-                <Menu>
-                  <MenuButton>
-                    <IconButton 
-                      icon={<HamburgerIcon />}
-                      size="xs"
-                      variant="ghost"
-                    />
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem onClick={() => handleDeleteProperty(p)}>
-                      <Button
-                        leftIcon={<DeleteIcon />}
-                        size="sm"
+                <Box>
+                  <Menu>
+                    <MenuButton>
+                      <IconButton 
+                        icon={<HamburgerIcon />}
+                        size="xs"
                         variant="ghost"
-                      >
-                        Delete
-                      </Button>
-                    </MenuItem>
-                    <MenuItem onClick={() => handleEditProperty(p)}>
-                      <Button
-                        leftIcon={<EditIcon />}
-                        size="sm"
-                        variant="ghost"
-                      >
-                        Edit
-                      </Button>
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
+                      />
+                    </MenuButton>
+                    <MenuList>
+                      <MenuItem onClick={() => handleDeleteProperty(p)}>
+                        <Button
+                          leftIcon={<DeleteIcon />}
+                          size="sm"
+                          variant="ghost"
+                        >
+                          Delete
+                        </Button>
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Box>
 
               </Flex>
             </FormLabel>

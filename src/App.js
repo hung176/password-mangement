@@ -6,6 +6,14 @@ import {
   Text,
   Flex,
   Button,
+  Input,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverCloseButton,
+  PopoverBody,
+  ButtonGroup,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { AddIcon } from '@chakra-ui/icons'
 import Unit from './Unit';
@@ -14,6 +22,9 @@ const db = firebase.firestore();
 
 function App() {
   const [units, setUnits] = useState([]);
+  const [newUnit, setNewUnit] = useState({ id: '' });
+
+  const { onOpen, onClose, isOpen } = useDisclosure()
 
   useEffect(() => {
     const fetchUnits = async() => {
@@ -30,7 +41,13 @@ function App() {
   }, [])
 
   const handleAddUnit = () => {
-    
+    console.log(newUnit)
+    setUnits([ ...units, newUnit ]);
+
+    db.collection('passwords').doc(newUnit.id).set(newUnit);
+
+    setNewUnit('');
+    onClose();
   };
 
   const handleAddPassword = (unitId, newProperties) => {
@@ -73,14 +90,55 @@ function App() {
       <Flex justify="center" p={4}>
         <Box w={{ base: '100%', md: '70%' }}>
           <Box d="flex" justifyContent="flex-end" my={4}>
-            <Button
-              leftIcon={<AddIcon />}
-              variant="outline"
-              colorScheme="blue"
-              onClick={handleAddUnit}
-            >
-              New Unit
-            </Button>
+
+          <Popover
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+          >
+            <PopoverTrigger>
+              <Button
+                leftIcon={<AddIcon />}
+                variant="outline"
+                colorScheme="blue"
+              >
+                New Unit
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent _focus={{ outline: 'none' }} maxW="250px">
+              <PopoverCloseButton />
+              <PopoverBody>
+                <Stack spacing={2}>
+                  <Text>Add a unit to list</Text>
+                  <Input
+                    type="text"
+                    size="sm"
+                    fontWeight="semibold"
+                    onChange={(e) => setNewUnit({ id: e.target.value })}
+                  />
+                  <ButtonGroup d="flex" justifyContent="flex-end">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                      onClose();
+                      setNewUnit('');
+                    }}>
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      colorScheme="blue"
+                      onClick={handleAddUnit}
+                    >
+                      Save
+                    </Button>
+                  </ButtonGroup>
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+
           </Box>
 
           <Stack spacing={4} borderWidth={1} borderColor="gray.200" rounded={6}>
