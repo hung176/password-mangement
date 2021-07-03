@@ -47,6 +47,13 @@ function App() {
     db.collection('passwords').doc(unitId).set(newUnit);
   };
 
+  const handleDeleteProperty = (newUnit) => {
+    const newUnits = units.map(unit => (unit.id === newUnit.id ? newUnit : unit));
+    setUnits(newUnits);
+
+    db.collection('passwords').doc(newUnit.id).set(newUnit);
+  };
+
   return (
     <Stack>
       <Box
@@ -73,7 +80,11 @@ function App() {
           <Stack spacing={4} borderWidth={1} borderColor="gray.200" rounded={6}>
             {units.map(unit => (
               <Box key={unit.id} p={4} borderBottomWidth={1} borderBottomColor="gray.200">
-                <Unit unit={unit} onAddPassword={handleAddPassword} />
+                <Unit
+                  unit={unit}
+                  onAddPassword={handleAddPassword}
+                  onDelete={handleDeleteProperty}
+                />
               </Box>
             ))}
           </Stack>
