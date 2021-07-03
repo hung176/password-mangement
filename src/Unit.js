@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import firebase from './firebase';
 import {
   Stack,
   Flex,
@@ -18,9 +17,10 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, DeleteIcon, EditIcon, CheckIcon } from '@chakra-ui/icons';
 import FormAddPassword from './FormAddPassword';
+import AlertDelete from './AlertDelete';
 import omit from 'lodash.omit';
 
-const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
+const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit }) => {
   const properties = Object.keys(unit).filter(p => p !== 'id');
 
   const [unitProperties, setUnitProperties] = useState(unit);
@@ -82,6 +82,7 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate }) => {
             />
           </Box>
           <FormAddPassword onChange={handleAddPassword} unitId={unit.id} />
+          <AlertDelete unit={unit} onDeleteUnit={onDeleteUnit} />
         </Stack>
       </Flex>
 

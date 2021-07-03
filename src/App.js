@@ -77,6 +77,13 @@ function App() {
     db.collection('passwords').doc(newUnit.id).set(newUnit);
   };
 
+  const handleDeleteUnit = (unitId) => {
+    const newUnits = units.filter(unit => unit.id !== unitId);
+    setUnits(newUnits);
+
+    db.collection('passwords').doc(unitId).delete();
+  };
+
   return (
     <Stack>
       <Box
@@ -149,6 +156,7 @@ function App() {
                   onAddPassword={handleAddPassword}
                   onDelete={handleDeleteProperty}
                   onUpdate={handleUpdateProperty}
+                  onDeleteUnit={handleDeleteUnit}
                 />
               </Box>
             ))}
