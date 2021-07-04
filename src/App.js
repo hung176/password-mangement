@@ -16,7 +16,7 @@ export default function App() {
           <MainPage />
         </Route>
 
-        <Route exact path="/:unitId/guide">
+        <Route path="/guide/:unitId">
           <GuidePage />
         </Route>
       </Switch>

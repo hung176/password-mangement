@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Stack,
   Flex,
@@ -23,6 +24,8 @@ import omit from 'lodash.omit';
 const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeInput }) => {
   const properties = Object.keys(unit).filter(p => p !== 'id');
   const [isDisableInput, setIsDisableInput] = useState(true);
+
+  const history = useHistory();
 
   const handleDeleteProperty = (p) => {
     const newUnit = omit(unit, p)
@@ -51,7 +54,14 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeI
       <Flex justify="space-between" align="center">
         <Box>
           <Heading fontSize="2xl" mb="5px">{unit.id}</Heading>
-          <Button size="xs" variant="outline" colorScheme="blue">Go to a guide</Button>
+          <Button
+            onClick={() => history.push(`/guide/${unit.id}`)} 
+            size="xs"
+            variant="outline"
+            colorScheme="blue"
+          >
+            Go to a guide
+          </Button>
         </Box>
         <Stack isInline>
           {!isDisableInput && (
@@ -84,7 +94,7 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeI
                 <Box>
                   <Menu>
                     <MenuButton>
-                      <IconButton 
+                      <IconButton
                         icon={<HamburgerIcon />}
                         size="xs"
                         variant="ghost"
