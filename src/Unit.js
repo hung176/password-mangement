@@ -22,13 +22,7 @@ import omit from 'lodash.omit';
 
 const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeInput }) => {
   const properties = Object.keys(unit).filter(p => p !== 'id');
-
   const [isDisableInput, setIsDisableInput] = useState(true);
-
-
-  const handleAddPassword = (id, newProperties) => {
-    onAddPassword(id, newProperties);
-  };
 
   const handleDeleteProperty = (p) => {
     const newUnit = omit(unit, p)
@@ -54,8 +48,11 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeI
 
   return (
     <Stack spacing={6}>
-      <Flex mb={2} justify="space-between" align="center">
-        <Heading fontSize="2xl">{unit.id}</Heading>
+      <Flex justify="space-between" align="center">
+        <Box>
+          <Heading fontSize="2xl" mb="5px">{unit.id}</Heading>
+          <Button size="xs" variant="outline" colorScheme="blue">Go to a guide</Button>
+        </Box>
         <Stack isInline>
           {!isDisableInput && (
             <IconButton
@@ -73,14 +70,14 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeI
             variant="ghost"
             onClick={() => handleEditProperty()}
           />
-          <FormAddPassword onChange={handleAddPassword} unitId={unit.id} />
+          <FormAddPassword onChange={onAddPassword} unitId={unit.id} />
           <AlertDelete unit={unit} onDeleteUnit={onDeleteUnit} />
         </Stack>
       </Flex>
 
-      <Flex flexWrap="wrap" justify="space-between">
+      <Flex flexWrap="wrap" justify="space-between" align="center">
         {properties.map(p => (
-          <FormControl key={p} w="120px" mt={{ base: '20px', md: 'none' }}>
+          <FormControl key={p} w="120px" mt={{ base: '20px', md: '0' }}>
             <FormLabel w="100%">
               <Flex justify="space-between" align="center">
                 <Text fontWeight="semibold">{p}</Text>
