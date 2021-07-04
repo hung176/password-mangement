@@ -27,6 +27,7 @@ function AlertDialogExample({ unit, onDeleteUnit }) {
       />
 
       <AlertDialog
+        isCentered
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}

@@ -41,7 +41,6 @@ function App() {
   }, [])
 
   const handleAddUnit = () => {
-    console.log(newUnit)
     setUnits([ ...units, newUnit ]);
 
     db.collection('passwords').doc(newUnit.id).set(newUnit);
@@ -63,14 +62,7 @@ function App() {
     db.collection('passwords').doc(unitId).set(newUnit);
   };
 
-  const handleDeleteProperty = (newUnit) => {
-    const newUnits = units.map(unit => (unit.id === newUnit.id ? newUnit : unit));
-    setUnits(newUnits);
-
-    db.collection('passwords').doc(newUnit.id).set(newUnit);
-  };
-
-  const handleUpdateProperty = (newUnit) => {
+  const handleChangeProperty = (newUnit) => {
     const newUnits = units.map(unit => (unit.id === newUnit.id ? newUnit : unit));
     setUnits(newUnits);
 
@@ -82,6 +74,11 @@ function App() {
     setUnits(newUnits);
 
     db.collection('passwords').doc(unitId).delete();
+  };
+
+  const handleChangeInput = (unit) => {
+    const nextUnits = units.map(u => (u.id === unit.id ? unit : u));
+    setUnits(nextUnits);
   };
 
   return (
@@ -97,55 +94,53 @@ function App() {
       <Flex justify="center" p={4}>
         <Box w={{ base: '100%', md: '70%' }}>
           <Box d="flex" justifyContent="flex-end" my={4}>
-
-          <Popover
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onClose={onClose}
-          >
-            <PopoverTrigger>
-              <Button
-                leftIcon={<AddIcon />}
-                variant="outline"
-                colorScheme="blue"
-              >
-                New Unit
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent _focus={{ outline: 'none' }} maxW="250px">
-              <PopoverCloseButton />
-              <PopoverBody>
-                <Stack spacing={2}>
-                  <Text>Add a unit to list</Text>
-                  <Input
-                    type="text"
-                    size="sm"
-                    fontWeight="semibold"
-                    onChange={(e) => setNewUnit({ id: e.target.value })}
-                  />
-                  <ButtonGroup d="flex" justifyContent="flex-end">
-                    <Button
-                      variant="outline"
+            <Popover
+              isOpen={isOpen}
+              onOpen={onOpen}
+              onClose={onClose}
+            >
+              <PopoverTrigger>
+                <Button
+                  leftIcon={<AddIcon />}
+                  variant="outline"
+                  colorScheme="blue"
+                >
+                  New Unit
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent _focus={{ outline: 'none' }} maxW="250px">
+                <PopoverCloseButton />
+                <PopoverBody>
+                  <Stack spacing={2}>
+                    <Text>Add a unit to list</Text>
+                    <Input
+                      type="text"
                       size="sm"
-                      onClick={() => {
-                      onClose();
-                      setNewUnit('');
-                    }}>
-                      Cancel
-                    </Button>
-                    <Button
-                      size="sm"
-                      colorScheme="blue"
-                      onClick={handleAddUnit}
-                    >
-                      Save
-                    </Button>
-                  </ButtonGroup>
-                </Stack>
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
-
+                      fontWeight="semibold"
+                      onChange={(e) => setNewUnit({ id: e.target.value })}
+                    />
+                    <ButtonGroup d="flex" justifyContent="flex-end">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                        onClose();
+                        setNewUnit('');
+                      }}>
+                        Cancel
+                      </Button>
+                      <Button
+                        size="sm"
+                        colorScheme="blue"
+                        onClick={handleAddUnit}
+                      >
+                        Save
+                      </Button>
+                    </ButtonGroup>
+                  </Stack>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Box>
 
           <Stack spacing={4} borderWidth={1} borderColor="gray.200" rounded={6}>
@@ -154,9 +149,10 @@ function App() {
                 <Unit
                   unit={unit}
                   onAddPassword={handleAddPassword}
-                  onDelete={handleDeleteProperty}
-                  onUpdate={handleUpdateProperty}
+                  onDelete={handleChangeProperty}
+                  onUpdate={handleChangeProperty}
                   onDeleteUnit={handleDeleteUnit}
+                  onChangeInput={handleChangeInput}
                 />
               </Box>
             ))}

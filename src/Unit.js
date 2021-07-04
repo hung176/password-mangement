@@ -20,13 +20,8 @@ import FormAddPassword from './FormAddPassword';
 import AlertDelete from './AlertDelete';
 import omit from 'lodash.omit';
 
-const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit }) => {
+const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeInput }) => {
   const properties = Object.keys(unit).filter(p => p !== 'id');
-
-  const [unitProperties, setUnitProperties] = useState(unit);
-  useEffect(() => {
-    setUnitProperties(unit)
-  }, [unit])
 
   const [isDisableInput, setIsDisableInput] = useState(true);
 
@@ -41,10 +36,11 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit }) => {
   };
 
   const handleInputChange = (e) => {
-    setUnitProperties({
-      ...unitProperties,
+    const nextUnit = {
+      ...unit,
       [e.target.name]: e.target.value,
-    });
+    };
+    onChangeInput(nextUnit);
   };
 
   const handleEditProperty = () => {
@@ -53,34 +49,30 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit }) => {
 
   const handleCheck = () => {
     setIsDisableInput(true);
-    onUpdate(unitProperties);
+    onUpdate(unit);
   }
 
   return (
     <Stack spacing={6}>
       <Flex mb={2} justify="space-between" align="center">
         <Heading fontSize="2xl">{unit.id}</Heading>
-        <Stack isInline spacing={2}>
+        <Stack isInline>
           {!isDisableInput && (
-            <Box textAlign="center">
-              <IconButton
-                icon={<CheckIcon />}
-                colorScheme="green"
-                size="md" 
-                variant="ghost"
-                onClick={handleCheck}
-              />
-            </Box>
-          )}
-          <Box textAlign="center">
             <IconButton
-              leftIcon={<EditIcon />}
-              colorScheme="blue"
-              size="md"
+              icon={<CheckIcon />}
+              colorScheme="green"
+              size="md" 
               variant="ghost"
-              onClick={() => handleEditProperty()}
+              onClick={handleCheck}
             />
-          </Box>
+          )}
+          <IconButton
+            leftIcon={<EditIcon />}
+            colorScheme="blue"
+            size="md"
+            variant="ghost"
+            onClick={() => handleEditProperty()}
+          />
           <FormAddPassword onChange={handleAddPassword} unitId={unit.id} />
           <AlertDelete unit={unit} onDeleteUnit={onDeleteUnit} />
         </Stack>
@@ -92,7 +84,6 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit }) => {
             <FormLabel w="100%">
               <Flex justify="space-between" align="center">
                 <Text fontWeight="semibold">{p}</Text>
-
                 <Box>
                   <Menu>
                     <MenuButton>
@@ -122,7 +113,7 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit }) => {
             <Input
               type="text"
               variant="filled"
-              value={unitProperties[p]}
+              value={unit[p]}
               name={p}
               isDisabled={isDisableInput}
               onChange={handleInputChange}
