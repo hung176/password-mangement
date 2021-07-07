@@ -44,6 +44,7 @@ function MainPage() {
     setUnits([ ...units, newUnit ]);
 
     db.collection('passwords').doc(newUnit.id).set(newUnit);
+    db.collection('guidelines').doc(newUnit.id).set({});
 
     setNewUnit('');
     onClose();
@@ -83,13 +84,6 @@ function MainPage() {
 
   return (
     <Stack>
-      <Box
-        p={4}
-        borderBottomWidth={2}
-        borderBottomColor="gray.200"
-      >
-        <Text fontSize="2xl" fontWeight="thin">Password Management</Text>
-      </Box>
 
       <Flex justify="center" p={2}>
         <Box w={{ base: '100%', md: '70%' }}>
