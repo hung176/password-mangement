@@ -14,8 +14,8 @@ const GuideStepHeader = ({
       justifyContent="center"
       alignItems="center"
       borderRadius="50%"
-      width={12}
-      height={12}
+      width={10}
+      height={10}
       border="2px solid"
       borderColor="gray.200"
       textAlign="center"
@@ -27,7 +27,7 @@ const GuideStepHeader = ({
     >
       {number}
     </Box>
-    <Text fontSize="lg" fontWeight="medium">
+    <Text fontSize="lg" fontWeight="medium" isTruncated>
       {title}
     </Text>
   </Stack>

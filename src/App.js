@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import MainPage from './MainPage';
 import GuidePage from './GuidePage';
+import GuideDetail from './GuideDetail';
 import Header from './Header';
 
 export default function App() {
@@ -20,6 +21,9 @@ export default function App() {
 
         <Route exact path="/guide/:unitId">
           <GuidePage />
+        </Route>
+        <Route exact path="/guide/:unitId/:property">
+          <GuideDetail />
         </Route>
       </Switch>
     </Router>
