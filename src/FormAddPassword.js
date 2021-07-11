@@ -38,7 +38,7 @@ const Form = ({ unitId, onCancel, onChange }) => {
   return (
     <Stack spacing={4} w="200px">
       <FormControl>
-        <FormLabel>Properties name</FormLabel>
+        <FormLabel>Property name</FormLabel>
         <Input
           name="properties"
           value={propertiesName}

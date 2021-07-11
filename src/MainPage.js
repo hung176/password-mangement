@@ -17,11 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from '@chakra-ui/icons'
 import Unit from './Unit';
+import pick from 'lodash.pick';
 
 const db = firebase.firestore();
 
 function MainPage() {
   const [units, setUnits] = useState([]);
+  const [guidelines, setGuidelines] = useState([]);
   const [newUnit, setNewUnit] = useState({ id: '' });
 
   const { onOpen, onClose, isOpen } = useDisclosure()
@@ -37,6 +39,20 @@ function MainPage() {
     }
 
     fetchUnits();
+
+  }, []);
+
+  useEffect(() => {
+    const fetchGuidelines = async() => {
+      const data = await db.collection('guidelines').get();
+      const guidelines = data.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setGuidelines(guidelines);
+    }
+
+    fetchGuidelines();
 
   }, [])
 
@@ -61,13 +77,25 @@ function MainPage() {
     setUnits(newUnits);
 
     db.collection('passwords').doc(unitId).set(newUnit);
+
+    const propertyKey = Object.keys(newProperties)[0];
+    db.collection('guidelines').doc(unitId).set({
+      [propertyKey]: {
+        1: {},
+      },
+    }, { merge: true });
   };
 
   const handleChangeProperty = (newUnit) => {
     const newUnits = units.map(unit => (unit.id === newUnit.id ? newUnit : unit));
     setUnits(newUnits);
 
+    const newKeys = Object.keys(newUnit);
+    const newGuideline = guidelines.find(guideline => guideline.id === newUnit.id);
+    const nextGuideline = pick(newGuideline, newKeys);
+
     db.collection('passwords').doc(newUnit.id).set(newUnit);
+    db.collection('guidelines').doc(newUnit.id).set(nextGuideline);
   };
 
   const handleDeleteUnit = (unitId) => {
@@ -75,6 +103,8 @@ function MainPage() {
     setUnits(newUnits);
 
     db.collection('passwords').doc(unitId).delete();
+
+    db.collection('guidelines').doc(unitId).delete();
   };
 
   const handleChangeInput = (unit) => {

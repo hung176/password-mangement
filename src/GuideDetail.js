@@ -29,11 +29,11 @@ const GuideDetail = () => {
   useEffect(() => {
     const getGuidelinesData = async() => {
       const data = await db.collection('guidelines').doc(unitId).get();
-      setSteps(data.data());
+      setSteps(data.data()[property]);
     };
 
     getGuidelinesData();
-  }, [unitId]);
+  }, [unitId, property]);
 
   return (
     <Stack
@@ -56,35 +56,49 @@ const GuideDetail = () => {
         </Stack>
       </Stack>
       <Stack spacing={4}>
-        {Object.keys(steps).map(step => (
-          <Stack isInline key={step}>
-            <GuideStepHeader 
-              number={step}
-              value={steps[step] || {}}
-              isEditHeader={isEditHeader}
-            />
-            <Flex justify="center" align="center">
-              <IconButton
-                icon={<CloseIcon />}
-                variant="ghost"
-                size="xs"
-                onClick={() => {
-                  const stepKeys = arrangeArray(Object.keys(steps).filter(key => key !== step));
-                  const newSteps = pick(steps, stepKeys);
-
-                  const newValues = Object.values(newSteps);
-                  const nextSteps = Object.assign(...stepKeys.map((key, i) => ({ [key]: newValues[i]})));
-                  console.log(stepKeys);
-
-                  setSteps(nextSteps);
-
-                  db.collection('guidelines').doc(unitId).set(newSteps);
-                }}
+        {Object.keys(steps).map(step => {
+          if (step === '1') {
+            return (
+              <Stack isInline key={step}>
+                <GuideStepHeader 
+                  number={step}
+                  value={steps[step] || {}}
+                  isEditHeader={isEditHeader}
+                />
+              </Stack>
+            );
+          }
+          return (
+            <Stack isInline key={step}>
+              <GuideStepHeader 
+                number={step}
+                value={steps[step] || {}}
+                isEditHeader={isEditHeader}
               />
-            </Flex>
-            {/* <GuideStepBody /> */}
-          </Stack>
-        ))}
+              <Flex justify="center" align="center">
+                <IconButton
+                  icon={<CloseIcon />}
+                  variant="ghost"
+                  size="xs"
+                  onClick={() => {
+                    const stepKeys = arrangeArray(Object.keys(steps).filter(key => key !== step));
+                    const newSteps = pick(steps, stepKeys);
+
+                    const newValues = Object.values(newSteps);
+                    const nextSteps = Object.assign(...stepKeys.map((key, i) => ({ [key]: newValues[i]})));
+
+                    setSteps(nextSteps);
+
+                    db.collection('guidelines').doc(unitId).update({
+                      [property]: nextSteps,
+                    });
+                  }}
+                />
+              </Flex>
+              {/* <GuideStepBody /> */}
+            </Stack>
+          );
+        })}
       </Stack>
 
       <IconButton
@@ -126,7 +140,7 @@ const GuideDetail = () => {
             setSteps({...steps, ...nextStep});
 
             db.collection('guidelines').doc(unitId).set({
-              ...nextStep,
+              [property]: nextStep,
             }, { merge: true });
           }}
         >
