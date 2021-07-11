@@ -81,7 +81,7 @@ function MainPage() {
     const propertyKey = Object.keys(newProperties)[0];
     db.collection('guidelines').doc(unitId).set({
       [propertyKey]: {
-        1: {},
+        1: { heading: '', body: '' },
       },
     }, { merge: true });
   };

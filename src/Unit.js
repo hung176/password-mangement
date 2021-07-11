@@ -16,7 +16,7 @@ import {
   Button,
   Box,
 } from '@chakra-ui/react';
-import { HamburgerIcon, DeleteIcon, EditIcon, CheckIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, DeleteIcon, EditIcon, CheckIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import FormAddPassword from './FormAddPassword';
 import AlertDelete from './AlertDelete';
 import omit from 'lodash.omit';
@@ -55,7 +55,7 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeI
         <Box>
           <Heading fontSize="2xl" mb="5px">{unit.id}</Heading>
           <Button
-            onClick={() => history.push(`/guide/${unit.id}`)} 
+            onClick={() => history.push(`/guide/${unit.id}`)}
             size="xs"
             variant="outline"
             colorScheme="blue"
@@ -101,10 +101,20 @@ const Unit = ({ unit, onAddPassword, onDelete, onUpdate, onDeleteUnit, onChangeI
                       />
                     </MenuButton>
                     <MenuList>
+                      <MenuItem onClick={() => history.push(`/guide/${unit.id}/${p}`)}>
+                        <Button
+                          leftIcon={<InfoOutlineIcon />}
+                          size="md"
+                          variant="ghost"
+                        >
+                          Guidelines
+                        </Button>
+                      </MenuItem>
+
                       <MenuItem onClick={() => handleDeleteProperty(p)}>
                         <Button
                           leftIcon={<DeleteIcon />}
-                          size="sm"
+                          size="md"
                           variant="ghost"
                         >
                           Delete

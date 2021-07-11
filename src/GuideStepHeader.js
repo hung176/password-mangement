@@ -7,8 +7,17 @@ import {
 } from '@chakra-ui/react';
 
 const GuideStepHeader = ({
-  number, value, isEditHeader,
+  step, value, isEditHeader, onHeadingChange,
 }) => {
+
+  const handleChange = (e) => {
+    const heading = {
+      [e.target.name]: e.target.value,
+    };
+
+    onHeadingChange(step, heading);
+  };
+
   return (
     <Stack isInline align="center" spacing={4} w="100%">
       <Box
@@ -27,7 +36,7 @@ const GuideStepHeader = ({
         flexGrow={0}
         flexShrink={0}
       >
-        {number}
+        {step}
       </Box>
 
       <InputGroup>
@@ -35,7 +44,9 @@ const GuideStepHeader = ({
           fontSize="lg"
           borderStyle={isEditHeader ? '' : 'hidden'}
           disabled={!isEditHeader}
+          name="heading"
           value={value.heading}
+          onChange={handleChange}
         />
       </InputGroup>
     </Stack>

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Box, Stack, IconButton, Text, Button, Flex } from '@chakra-ui/react';
 import { EditIcon, CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import GuideStepHeader from './GuideStepHeader';
+import GuideStepBody from './GuideStepBody';
 
 import firebase from './firebase';
 import pick from 'lodash.pick';
@@ -14,7 +15,6 @@ const GuideDetail = () => {
   const { unitId, property } = useParams();
   const [passwords, setPasswords] = useState({});
   const [isEditHeader, setIsEditHeader] = useState(false);
-
   const [steps, setSteps] = useState({});
 
   useEffect(() => {
@@ -34,6 +34,16 @@ const GuideDetail = () => {
 
     getGuidelinesData();
   }, [unitId, property]);
+
+  const handleInputChange = (step, stepObj) => {
+    setSteps({
+      ...steps,
+      [step]: {
+        ...steps[step],
+        ...stepObj,
+      },
+    });
+  };
 
   return (
     <Stack
@@ -59,43 +69,58 @@ const GuideDetail = () => {
         {Object.keys(steps).map(step => {
           if (step === '1') {
             return (
-              <Stack isInline key={step}>
+              <Stack key={step}>
                 <GuideStepHeader 
-                  number={step}
-                  value={steps[step] || {}}
+                  step={step}
+                  value={steps[step]}
                   isEditHeader={isEditHeader}
+                  onHeadingChange={handleInputChange}
+                />
+                <GuideStepBody
+                  step={step}
+                  value={steps[step]}
+                  isEditHeader={isEditHeader}
+                  onBodyChange={handleInputChange}
                 />
               </Stack>
             );
           }
           return (
-            <Stack isInline key={step}>
-              <GuideStepHeader 
-                number={step}
-                value={steps[step] || {}}
-                isEditHeader={isEditHeader}
-              />
-              <Flex justify="center" align="center">
-                <IconButton
-                  icon={<CloseIcon />}
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => {
-                    const stepKeys = arrangeArray(Object.keys(steps).filter(key => key !== step));
-                    const newSteps = pick(steps, stepKeys);
-
-                    const newValues = Object.values(newSteps);
-                    const nextSteps = Object.assign(...stepKeys.map((key, i) => ({ [key]: newValues[i]})));
-
-                    setSteps(nextSteps);
-
-                    db.collection('guidelines').doc(unitId).update({
-                      [property]: nextSteps,
-                    });
-                  }}
+            <Stack spacing={2} key={step}>
+              <Stack isInline>
+                <GuideStepHeader 
+                  step={step}
+                  value={steps[step]}
+                  isEditHeader={isEditHeader}
+                  onHeadingChange={handleInputChange}
                 />
-              </Flex>
-              {/* <GuideStepBody /> */}
+                <Flex justify="center" align="center">
+                  <IconButton
+                    icon={<CloseIcon />}
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => {
+                      const stepKeys = Object.keys(steps).filter(key => key !== step);
+                      const newSteps = pick(steps, stepKeys);
+
+                      const newValues = Object.values(newSteps);
+                      const nextSteps = Object.assign(...arrangeArray(stepKeys).map((key, i) => ({ [key]: newValues[i]})));
+
+                      setSteps(nextSteps);
+
+                      db.collection('guidelines').doc(unitId).update({
+                        [property]: nextSteps,
+                      });
+                    }}
+                  />
+                </Flex>
+              </Stack>
+              <GuideStepBody
+                step={step}
+                value={steps[step]}
+                isEditHeader={isEditHeader}
+                onBodyChange={handleInputChange}
+                />
             </Stack>
           );
         })}
@@ -121,7 +146,12 @@ const GuideDetail = () => {
           position="absolute"
           top={4}
           right={14}
-          onClick={() => setIsEditHeader(false)}
+          onClick={() => {
+            db.collection('guidelines').doc(unitId).update({
+              [property]: steps,
+            });
+            setIsEditHeader(false)
+          }}
         />
       )}
 
