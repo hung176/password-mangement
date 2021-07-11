@@ -3,16 +3,14 @@ import {
   Box,
   Stack,
   InputGroup,
-  InputRightElement,
   Input,
 } from '@chakra-ui/react';
-import { CheckIcon } from '@chakra-ui/icons';
 
 const GuideStepHeader = ({
   number, value, isEditHeader,
 }) => {
   return (
-    <Stack isInline align="center" spacing={4}>
+    <Stack isInline align="center" spacing={4} w="100%">
       <Box
         display="flex"
         justifyContent="center"
@@ -38,11 +36,6 @@ const GuideStepHeader = ({
           borderStyle={isEditHeader ? '' : 'hidden'}
           disabled={!isEditHeader}
           value={value.heading}
-        />
-        <InputRightElement
-          children={<CheckIcon color="green.500" />}
-          display={ isEditHeader ? 'flex' : 'none'}
-          // onClick={handleCheck}
         />
       </InputGroup>
     </Stack>

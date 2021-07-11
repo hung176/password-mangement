@@ -47,7 +47,6 @@ const GuidePage = () => {
           css={css`
             &:hover {
               box-shadow: 0.7rem 0.7rem rgb(19, 86, 162);
-              margin: 1.5rem 0.5rem 0 0;
             }
           `}
         >
