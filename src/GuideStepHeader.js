@@ -1,9 +1,8 @@
 import React from 'react';
 import {
   Box,
-  Stack,
-  InputGroup,
-  Input,
+  Flex,
+  Textarea,
 } from '@chakra-ui/react';
 
 const GuideStepHeader = ({
@@ -19,7 +18,7 @@ const GuideStepHeader = ({
   };
 
   return (
-    <Stack isInline align="center" spacing={4} w="100%">
+    <Flex align="flex-start" spacing={4} w="100%">
       <Box
         display="flex"
         justifyContent="center"
@@ -39,17 +38,22 @@ const GuideStepHeader = ({
         {step}
       </Box>
 
-      <InputGroup>
-        <Input
+      <Box w="100%">
+        <Textarea
+          size="xs"
           fontSize="lg"
+          fontWeight="bold"
+          variant="outline"
+          maxH="fit-content"
           borderStyle={isEditHeader ? '' : 'hidden'}
           disabled={!isEditHeader}
           name="heading"
           value={value.heading}
           onChange={handleChange}
         />
-      </InputGroup>
-    </Stack>
+      </Box>
+
+    </Flex>
   );
 };
 
