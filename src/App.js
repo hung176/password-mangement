@@ -9,6 +9,7 @@ import MainPage from './MainPage';
 import GuidePage from './GuidePage';
 import GuideDetail from './GuideDetail';
 import Header from './Header';
+import './index.css';
 
 export default function App() {
   return (

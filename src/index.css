@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.filelabel {
+  width: fit-content;
+  border: 2px dashed grey;
+  padding: 2px;
+}
+.filelabel:hover {
+border: 2px dashed #1665c4;
+}
+.filelabel:hover .fa,
+.filelabel:hover .title {
+color: #1665c4;
+}
+#FileInput{
+  display:none;
+}
